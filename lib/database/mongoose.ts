@@ -3,17 +3,16 @@ import mongoose, { Mongoose } from 'mongoose';
 const MONGODB_URL = process.env.MONGODB_URL;
 
 interface MongooseConnection {
-  conn: mongoose.Mongoose | null;
-  promise: Promise<mongoose.Mongoose> | null;
+  conn: Mongoose | null;
+  promise: Promise<Mongoose> | null;
 }
 
-let cached: MongooseConnection = (global as any).mongoose;
+let cached: MongooseConnection = (global as any).mongoose
 
-if (!cached) {
-  cached = (global as any).mongoose = {
-    conn: null,
-    promise: null,
-  };
+if(!cached) {
+  cached = (global as any).mongoose = { 
+    conn: null, promise: null 
+  }
 }
 
 export const connectToDatabase = async () => {
