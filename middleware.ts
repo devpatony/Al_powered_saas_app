@@ -1,6 +1,14 @@
+import { NextRequest, NextResponse, NextFetchEvent } from 'next/server';
 import { clerkMiddleware } from "@clerk/nextjs/server";
 
-export default clerkMiddleware();
+const publicRoutes = ["/api/webhooks/clerk"];
+
+export default function middleware(req: NextRequest, event: NextFetchEvent) {
+  if (publicRoutes.some(route => req.nextUrl.pathname.startsWith(route))) {
+    return NextResponse.next();
+  }
+  return clerkMiddleware()(req, event);
+}
 
 export const config = {
   matcher: [
