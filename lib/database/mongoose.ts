@@ -19,16 +19,23 @@ if (!cached) {
 }
 
 export const connectToDatabase = async () => {
-  if (cached.conn) return cached.conn;
+  if (cached.conn) {
+    console.log('Using existing database connection');
+    return cached.conn;
+  }
 
   if (!MONGODB_URL) throw new Error('Missing MONGODB_URL');
 
-  cached.promise =
-    cached.promise ||
-    mongoose.connect(MONGODB_URL, {
-      dbName: 'imaginify',
-      bufferCommands: false,
-    });
+  cached.promise = cached.promise || mongoose.connect(MONGODB_URL, {
+    dbName: 'imaginify', // Specify your database name here
+    bufferCommands: false,
+  }).then((mongoose) => {
+    console.log('Connected to MongoDB');
+    return mongoose;
+  }).catch((error) => {
+    console.error('Error connecting to MongoDB:', error);
+    throw error;
+  });
 
   cached.conn = await cached.promise;
 

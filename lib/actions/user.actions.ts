@@ -6,15 +6,28 @@ import User from "../database/models/user.model";
 import { connectToDatabase } from "../database/mongoose";
 import { handleError } from "../utils";
 
+interface CreateUserParams {
+  clerkId: string;
+  email: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  photo: string;
+}
+
 // CREATE
 export async function createUser(user: CreateUserParams) {
   try {
     await connectToDatabase();
+    console.log("Connected to database");
 
+    console.log("Creating user with data:", user);
     const newUser = await User.create(user);
+    console.log("User created:", newUser);
 
     return JSON.parse(JSON.stringify(newUser));
   } catch (error) {
+    console.error("Error creating user:", error);
     handleError(error);
   }
 }
