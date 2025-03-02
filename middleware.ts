@@ -1,23 +1,18 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 
-const isProtectedRoute = createRouteMatcher([
-  '/',
-  '/api/webhooks(.*)'
-]);
+const isPublicRoute = createRouteMatcher(['/api/webhooks(.*)','/sign-in(.*)', '/sign-up(.*)'])
 
-export default clerkMiddleware(async (auth, req) => {
-  const authObject = await auth();
-  console.log('Auth object:', authObject);
-  console.log('Request URL:', req.url);
-
-  if (isProtectedRoute(req) && !authObject.userId) {
-    console.log('Protected route accessed without authentication, redirecting to sign-in.');
-    return authObject.redirectToSignIn();
+export default clerkMiddleware(async (auth, request) => {
+  if (!isPublicRoute(request)) {
+    await auth.protect()
   }
-
-  console.log('Request is allowed.');
-});
+})
 
 export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
-};
+  matcher: [
+    // Skip Next.js internals and all static files, unless found in search params
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    // Always run for API routes
+    '/(api|trpc)(.*)',
+  ],
+}
