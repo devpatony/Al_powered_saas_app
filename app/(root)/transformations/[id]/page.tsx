@@ -8,14 +8,13 @@ import { Button } from "@/components/ui/button";
 import { getImageById } from "@/lib/actions/image.actions";
 import { getImageSize } from "@/lib/utils";
 import { DeleteConfirmation } from "@/components/shared/DeleteConfirmation";
-import { PageProps } from "next/page-props";
 
 interface ImageDetailsParams {
   id: string;
 }
 
-const ImageDetails = async ({ params }: PageProps) => {
-  const { id } = params as ImageDetailsParams;
+const ImageDetails = async ({ params }: { params: ImageDetailsParams }) => {
+  const { id } = params;
   const { userId } = await auth();
 
   const image = await getImageById(id);

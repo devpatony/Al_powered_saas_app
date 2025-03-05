@@ -7,25 +7,7 @@ import { Collection } from "@/components/shared/Collection";
 import { getUserImages } from "@/lib/actions/image.actions";
 import { getUserById } from "@/lib/actions/user.actions";
 
-interface ProfilePageParams {
-  id: string;
-  type: TransformationTypeKey;
-}
-
-interface ProfilePageSearchParams {
-  query?: string;
-  page?: string;
-}
-
-interface PageProps {
-  params: ProfilePageParams;
-  searchParams: ProfilePageSearchParams;
-}
-
-const ProfilePage = async ({ params, searchParams }: PageProps) => {
-  const { id, type } = params;
-  const { query, page } = searchParams;
-
+const ProfilePage = async () => {
   const { userId } = await auth();
 
   if (!userId) {
@@ -33,8 +15,8 @@ const ProfilePage = async ({ params, searchParams }: PageProps) => {
   }
 
   const user = await getUserById(userId);
-  const currentPage = Number(page) || 1;
-  const searchQuery = query || '';
+  const currentPage = 1; // Default page value
+  const searchQuery = ''; // Default search query
 
   const images = await getUserImages({ page: currentPage, userId: user._id });
 
