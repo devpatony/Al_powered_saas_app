@@ -8,10 +8,9 @@ interface SearchParamProps {
   searchParams: { [key: string]: string | string[] | undefined };
 }
 
-const Home = async ({ searchParams }: Promise<SearchParamProps>) => {
-  const { searchParams: params } = await searchParams;
-  const page = Number(params.page) || 1;
-  const searchQuery = (params.query as string) || '';
+const Home = async ({ searchParams }: SearchParamProps) => {
+  const page = Number(searchParams.page) || 1;
+  const searchQuery = (searchParams.query as string) || '';
 
   const images = await getAllImages({ page, searchQuery });
 
