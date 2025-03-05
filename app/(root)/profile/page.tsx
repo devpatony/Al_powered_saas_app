@@ -6,7 +6,6 @@ import Header from "@/components/shared/Header";
 import { Collection } from "@/components/shared/Collection";
 import { getUserImages } from "@/lib/actions/image.actions";
 import { getUserById } from "@/lib/actions/user.actions";
-import { PageProps } from "next/page-props";
 
 interface ProfilePageParams {
   id: string;
@@ -18,9 +17,14 @@ interface ProfilePageSearchParams {
   page?: string;
 }
 
+interface PageProps {
+  params: ProfilePageParams;
+  searchParams: ProfilePageSearchParams;
+}
+
 const ProfilePage = async ({ params, searchParams }: PageProps) => {
-  const { id, type } = params as ProfilePageParams;
-  const { query, page } = searchParams as ProfilePageSearchParams;
+  const { id, type } = params;
+  const { query, page } = searchParams;
 
   const { userId } = await auth();
 
