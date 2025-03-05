@@ -1,20 +1,38 @@
 import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";
-import { redirect } from "next/navigation";
+import Link from "next/link";
 
-import { Collection } from "@/components/shared/Collection";
 import Header from "@/components/shared/Header";
+import { Collection } from "@/components/shared/Collection";
 import { getUserImages } from "@/lib/actions/image.actions";
 import { getUserById } from "@/lib/actions/user.actions";
+import { PageProps } from "next/page-props";
 
-const Profile = async ({ searchParams }: SearchParamProps) => {
-  const page = Number(searchParams?.page) || 1;
+interface ProfilePageParams {
+  id: string;
+  type: TransformationTypeKey;
+}
+
+interface ProfilePageSearchParams {
+  query?: string;
+  page?: string;
+}
+
+const ProfilePage = async ({ params, searchParams }: PageProps) => {
+  const { id, type } = params as ProfilePageParams;
+  const { query, page } = searchParams as ProfilePageSearchParams;
+
   const { userId } = await auth();
 
-  if (!userId) redirect("/sign-in");
+  if (!userId) {
+    redirect("/sign-in");
+  }
 
   const user = await getUserById(userId);
-  const images = await getUserImages({ page, userId: user._id });
+  const currentPage = Number(page) || 1;
+  const searchQuery = query || '';
+
+  const images = await getUserImages({ page: currentPage, userId: user._id });
 
   return (
     <>
@@ -54,11 +72,11 @@ const Profile = async ({ searchParams }: SearchParamProps) => {
         <Collection
           images={images?.data}
           totalPages={images?.totalPages}
-          page={page}
+          page={currentPage}
         />
       </section>
     </>
   );
 };
 
-export default Profile;
+export default ProfilePage;
