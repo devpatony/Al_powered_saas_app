@@ -4,12 +4,18 @@ import { transformationTypes } from '@/constants'
 import { getUserById } from '@/lib/actions/user.actions';
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
+import { PageProps } from 'next/page-props';
 
-const AddTransformationTypePage = async ({ params: { type } }: SearchParamProps) => {
+interface TransformationTypeParams {
+  type: string;
+}
+
+const AddTransformationTypePage = async ({ params }: PageProps) => {
+  const { type } = params as TransformationTypeParams;
   const { userId } = await auth();
   const transformation = transformationTypes[type];
 
-  if(!userId) redirect('/sign-in')
+  if (!userId) redirect('/sign-in');
 
   const user = await getUserById(userId);
 
@@ -32,4 +38,4 @@ const AddTransformationTypePage = async ({ params: { type } }: SearchParamProps)
   )
 }
 
-export default AddTransformationTypePage
+export default AddTransformationTypePage;
