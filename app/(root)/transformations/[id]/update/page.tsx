@@ -6,8 +6,14 @@ import TransformationForm from "@/components/shared/TransformationForm";
 import { transformationTypes } from "@/constants";
 import { getUserById } from "@/lib/actions/user.actions";
 import { getImageById } from "@/lib/actions/image.actions";
+import { PageProps } from "next/page-props";
 
-const Page = async ({ params: { id } }: SearchParamProps) => {
+interface ImageDetailsParams {
+  id: string;
+}
+
+const Page = async ({ params }: PageProps) => {
+  const { id } = params as ImageDetailsParams;
   const { userId } = await auth();
 
   if (!userId) redirect("/sign-in");
