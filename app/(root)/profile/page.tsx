@@ -1,24 +1,20 @@
 import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";
-import Link from "next/link";
+import { redirect } from "next/navigation";
 
-import Header from "@/components/shared/Header";
 import { Collection } from "@/components/shared/Collection";
+import Header from "@/components/shared/Header";
 import { getUserImages } from "@/lib/actions/image.actions";
 import { getUserById } from "@/lib/actions/user.actions";
 
-const ProfilePage = async () => {
+const Profile = async ({ searchParams }: SearchParamProps) => {
+  const page = Number(searchParams?.page) || 1;
   const { userId } = await auth();
 
-  if (!userId) {
-    redirect("/sign-in");
-  }
+  if (!userId) redirect("/sign-in");
 
   const user = await getUserById(userId);
-  const currentPage = 1; // Default page value
-  const searchQuery = ''; // Default search query
-
-  const images = await getUserImages({ page: currentPage, userId: user._id });
+  const images = await getUserImages({ page, userId: user._id });
 
   return (
     <>
@@ -44,7 +40,7 @@ const ProfilePage = async () => {
           <div className="mt-4 flex items-center gap-4">
             <Image
               src="/assets/icons/photo.svg"
-              alt="photo"
+              alt="coins"
               width={50}
               height={50}
               className="size-9 md:size-12"
@@ -58,11 +54,11 @@ const ProfilePage = async () => {
         <Collection
           images={images?.data}
           totalPages={images?.totalPages}
-          page={currentPage}
+          page={page}
         />
       </section>
     </>
   );
 };
 
-export default ProfilePage;
+export default Profile;

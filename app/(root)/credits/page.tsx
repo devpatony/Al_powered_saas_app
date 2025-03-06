@@ -1,6 +1,5 @@
-import { SignedIn } from "@clerk/nextjs";
-import { auth } from "@clerk/nextjs/server";
-
+import { SignedIn }from "@clerk/nextjs";
+import {auth } from "@clerk/nextjs/server";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 
@@ -29,7 +28,7 @@ const Credits = async () => {
           {plans.map((plan) => (
             <li key={plan.name} className="credits-item">
               <div className="flex-center flex-col gap-3">
-                <Image src={plan.icon} alt={plan.name} width={50} height={50} />
+                <Image src={plan.icon} alt="check" width={50} height={50} />
                 <p className="p-20-semibold mt-2 text-purple-500">
                   {plan.name}
                 </p>
@@ -48,7 +47,7 @@ const Credits = async () => {
                       src={`/assets/icons/${
                         inclusion.isIncluded ? "check.svg" : "cross.svg"
                       }`}
-                      alt={inclusion.label}
+                      alt="check"
                       width={24}
                       height={24}
                     />
@@ -62,12 +61,14 @@ const Credits = async () => {
                   Free Consumable
                 </Button>
               ) : (
-                <Checkout
-                  plan={plan.name}
-                  amount={plan.price}
-                  credits={plan.credits}
-                  buyerId={user._id}
-                />
+                <SignedIn>
+                  <Checkout
+                    plan={plan.name}
+                    amount={plan.price}
+                    credits={plan.credits}
+                    buyerId={user._id}
+                  />
+                </SignedIn>
               )}
             </li>
           ))}
