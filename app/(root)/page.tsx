@@ -1,25 +1,20 @@
-import { Collection } from "@/components/shared/Collection";
-import { navLinks } from "@/constants";
-import { getAllImages } from "@/lib/actions/image.actions";
-import Image from "next/image";
-import Link from "next/link";
+import { Collection } from "@/components/shared/Collection"
+import { navLinks } from "@/constants"
+import { getAllImages } from "@/lib/actions/image.actions"
+import Image from "next/image"
+import Link from "next/link"
 
-interface HomePageSearchParams {
-  query?: string;
-  page?: string;
-}
+const Home = async ({ searchParams }: SearchParamProps) => {
+  const page = Number(searchParams?.page) || 1;
+  const searchQuery = (searchParams?.query as string) || '';
 
-const Home = async ({ searchParams }: { searchParams: HomePageSearchParams }) => {
-  const page = Number(searchParams.page) || 1;
-  const searchQuery = searchParams.query || '';
-
-  const images = await getAllImages({ page, searchQuery });
+  const images = await getAllImages({ page, searchQuery})
 
   return (
     <>
       <section className="home">
         <h1 className="home-heading">
-          Unleash Your Creative Vision with ImageLab
+          Unleash Your Creative Vision with ImaageLab   
         </h1>
         <ul className="flex-center w-full gap-20">
           {navLinks.slice(1, 5).map((link) => (
@@ -46,7 +41,7 @@ const Home = async ({ searchParams }: { searchParams: HomePageSearchParams }) =>
         />
       </section>
     </>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

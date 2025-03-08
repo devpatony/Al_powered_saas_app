@@ -7,12 +7,8 @@ import Header from "@/components/shared/Header";
 import { getUserImages } from "@/lib/actions/image.actions";
 import { getUserById } from "@/lib/actions/user.actions";
 
-interface ProfilePageSearchParams {
-  page?: string;
-}
-
-const Profile = async ({ searchParams }: { searchParams: ProfilePageSearchParams }) => {
-  const page = Number(searchParams.page) || 1;
+const Profile = async ({ searchParams }: SearchParamProps) => {
+  const page = Number(searchParams?.page) || 1;
   const { userId } = await auth();
 
   if (!userId) redirect("/sign-in");
@@ -44,7 +40,7 @@ const Profile = async ({ searchParams }: { searchParams: ProfilePageSearchParams
           <div className="mt-4 flex items-center gap-4">
             <Image
               src="/assets/icons/photo.svg"
-              alt="photo"
+              alt="coins"
               width={50}
               height={50}
               className="size-9 md:size-12"
